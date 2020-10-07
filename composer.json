@@ -1,0 +1,19 @@
+{
+    "name": "proximify/uniweb-api",
+    "description": "Official API for the UNIWeb application.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Proximify Inc",
+            "email": "support@proximify.ca"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Proximify\\Uniweb\\API\\": "src"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {}
+}
