@@ -1,0 +1,11 @@
+{
+    "class": "Proximify\\Uniweb\\API\\UniwebClient",
+    "method": "runQuery",
+    "isStatic": true,
+    "askConfirm": false,
+    "arguments": {
+        "name": {
+            "prompt": "Name of the query?"
+        }
+    }
+}

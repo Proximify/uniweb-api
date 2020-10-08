@@ -16,6 +16,10 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.1.0"
+        "php": ">=7.1.0",
+        "proximify/cli-prompter": "^1.0"
+    },
+    "scripts": {
+        "query": "Proximify\\CLIPrompter::auto"
     }
 }

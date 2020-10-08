@@ -1,0 +1,57 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "1d6fa082250b2821748a054f1b9afc6d",
+    "packages": [
+        {
+            "name": "proximify/cli-prompter",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Proximify/cli-prompter.git",
+                "reference": "70b85a440b166bd0f644f323e95f23da05be96ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Proximify/cli-prompter/zipball/70b85a440b166bd0f644f323e95f23da05be96ff",
+                "reference": "70b85a440b166bd0f644f323e95f23da05be96ff",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Proximify\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Proximify Inc",
+                    "email": "support@proximify.ca"
+                }
+            ],
+            "description": "Generic class to create interactive command-line interfaces for Composer-based projects.",
+            "time": "2020-10-08T18:41:28+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.1.0"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
+}

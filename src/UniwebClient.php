@@ -432,6 +432,12 @@ class UniwebClient
 		error_log(print_r($data, true));
 	}
 
+	public static function runQuery(array $params)
+	{
+		echo "\nRunning query...";
+		print_r($params);
+	}
+
 	/**
 	 * Contacts the resource server and retrieves the requested resources.
 	 *
