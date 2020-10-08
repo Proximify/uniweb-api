@@ -1,11 +1,12 @@
 {
     "class": "Proximify\\Uniweb\\API\\UniwebClient",
-    "method": "runQuery",
+    "method": "outputQuery",
     "isStatic": true,
     "askConfirm": false,
     "arguments": {
-        "name": {
-            "prompt": "Name of the query?"
+        "queryName": {
+            "prompt": "Name of the query?",
+            "index": 0
         }
     }
 }

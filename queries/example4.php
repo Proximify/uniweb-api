@@ -16,6 +16,12 @@
  * ones as PHP arrays.
  */
 
+use Proximify\Uniweb\API\UniwebClient;
+
+if (!isset($client) || !($client instanceof UniwebClient)) {
+	throw new Exception('The global variable $client must be a UniwebClient.');
+}
+
 $id = 'macrini@proximify.ca';
 $sectionName = 'cv/contributions/presentations';
 $subsectionName = $sectionName . '/funding_sources';

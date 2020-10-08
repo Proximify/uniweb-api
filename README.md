@@ -32,3 +32,9 @@ $ cd vendor/proximify/uniweb-api/www/ && php -S localhost:8000
 ```
 
 While the PHP web server is running, the URL `http://localhost:8000` should display the website.
+
+Alternatively, it is possible to test the predefined queries from the command line using composer and the `query` script.
+
+```bash
+$ composer query example3
+```

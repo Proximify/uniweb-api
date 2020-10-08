@@ -12,6 +12,7 @@
 namespace Proximify\Uniweb\API;
 
 use Exception;
+use Proximify\CLIPrompter;
 
 require 'RemoteConnection.php';
 
@@ -432,10 +433,64 @@ class UniwebClient
 		error_log(print_r($data, true));
 	}
 
-	public static function runQuery(array $params)
+	/**
+	 * Run a predefined API query.
+	 *
+	 * @param array $params Query parameters.
+	 * @return string The response.
+	 */
+	public static function runQuery(array $params): string
 	{
-		echo "\nRunning query...";
-		print_r($params);
+		$queryName = $params['queryName'] ?? '';
+
+		$rootDir = $params['rootDir'] ?? getcwd();
+
+		$credentialsPath = $params['credentialsPath'] ??
+			"$rootDir/settings/credentials.json";
+
+		$json = file_get_contents($credentialsPath);
+
+		$credentials = $json ? json_decode($json, true) : [];
+
+		// Disallow paths with dots (i.e. no relative paths)
+		if ($queryName && strpos($queryName, '.') === false) {
+			$prefix = "$rootDir/queries/$queryName";
+
+			// Some queries are in a sub-folder and others are a single file
+			if (is_dir($prefix)) {
+				$prefix .= "/$queryName";
+			}
+
+			if (is_file("$prefix.php")) {
+				$filename = "$prefix.php";
+			}
+		}
+
+		// Start buffering the standard output.
+		ob_start();
+
+		// The $client is used in the examples as a global variable.
+		$client = new self($credentials);
+
+		include $filename;
+
+		$output = ob_get_contents();
+
+		// Finish buffering and clean the buffer
+		ob_end_clean();
+
+		return $output;
+	}
+
+	/**
+	 * Print out the response from runQuery().
+	 *
+	 * @param array $params
+	 * @return void
+	 */
+	static public function outputQuery(array $params): void
+	{
+		echo self::runQuery($params);
 	}
 
 	/**

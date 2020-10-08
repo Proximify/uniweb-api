@@ -1,5 +1,11 @@
 <?php
 
+use Proximify\Uniweb\API\UniwebClient;
+
+if (!isset($client) || !($client instanceof UniwebClient)) {
+	throw new Exception('The global variable $client must be a UniwebClient.');
+}
+
 // When selecting one member, you can use the property 'id' instead of a filter. In that
 // case, the response won't be an array of members but just the member that you need
 $id = 'macrini@proximify.ca';

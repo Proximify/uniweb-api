@@ -1,11 +1,18 @@
 <?php
-require_once 'markup_utils.php';
 
 /**
  * In this example we build a Faculty webpage using profile information in the
  * uniweb profile pages. In this example, we select all professors in the Faculty
  * of Engineering.
  */
+
+require_once 'markup_utils.php';
+
+use Proximify\Uniweb\API\UniwebClient;
+
+if (!isset($client) || !($client instanceof UniwebClient)) {
+	throw new Exception('The global variable $client must be a UniwebClient.');
+}
 
 // Get authorized API client
 $filter = ['unit' => 'Faculty of Medicine', 'title' => 'Professor'];
@@ -55,7 +62,8 @@ foreach ($response as $memberId => $member) {
 	$items[] = makeTableItem($picture, $name, $title, $interests, $description);
 }
 
-// Joint all items in a single string value
+// Joint all items in a single string value.
+// Note that $tableData is referenced within the page_template.html
 $tableData = implode('', $items);
 
 // Include the full page HTML. In there, we echo the value of $tableData.

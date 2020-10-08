@@ -4,6 +4,12 @@
  * In this example we will edit user's profile section.
  */
 
+use Proximify\Uniweb\API\UniwebClient;
+
+if (!isset($client) || !($client instanceof UniwebClient)) {
+	throw new Exception('The global variable $client must be a UniwebClient.');
+}
+
 $id = 'macrini@proximify.ca';
 $resources = array('cv/user_profile');
 $readParams = array('id' => $id, 'resources' => $resources);

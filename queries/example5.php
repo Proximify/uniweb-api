@@ -1,5 +1,11 @@
 <?php
 
+use Proximify\Uniweb\API\UniwebClient;
+
+if (!isset($client) || !($client instanceof UniwebClient)) {
+	throw new Exception('The global variable $client must be a UniwebClient.');
+}
+
 // Prepare a 'read' request
 $resources = array('profile/membership_information', 'profile/research_interests');
 $filter = array('loginName' => 'macrini@proximify.ca');

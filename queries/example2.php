@@ -18,6 +18,12 @@
  * to specify the full "path" of a theme to be sure that we are selecting the right one.
  */
 
+use Proximify\Uniweb\API\UniwebClient;
+
+if (!isset($client) || !($client instanceof UniwebClient)) {
+	throw new Exception('The global variable $client must be a UniwebClient.');
+}
+
 // Set the login name of the user whose profile we want to write to.
 $id = 'macrini@proximify.ca';
 $resources = array('profile/research_interests/_fields_/interest');
@@ -75,11 +81,12 @@ $resources = array('profile/research_interests' => array(
 	array('interest' => $interestId1),
 	array('interest' => $interestId2)
 ));
+
 $params = array('resources' => $resources, 'id' => $id);
 $response = $client->add($params);
 
 if ($response) {
-	echo "'$interest1' and '$interest2[0]' were added as new interests for user '$id'";
+	return "'$interest1' and '$interest2[0]' were added as new interests for user '$id'";
 } else {
-	echo "Error: Could not add as new interests for user '$id'";
+	return "Error: Could not add as new interests for user '$id'";
 }

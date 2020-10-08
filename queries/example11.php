@@ -5,6 +5,12 @@
  * as a URL. If you want to use a file instead, please read the next example file.
  */
 
+use Proximify\Uniweb\API\UniwebClient;
+
+if (!isset($client) || !($client instanceof UniwebClient)) {
+	throw new Exception('The global variable $client must be a UniwebClient.');
+}
+
 // Set the login name of the user whose profile we want to write to.
 $id = 'macrini@proximify.ca';
 
