@@ -86,7 +86,7 @@ $params = array('resources' => $resources, 'id' => $id);
 $response = $client->add($params);
 
 if ($response) {
-	return "'$interest1' and '$interest2[0]' were added as new interests for user '$id'";
+	echo "'$interest1' and '$interest2[0]' were added as new interests for user '$id'";
 } else {
-	return "Error: Could not add as new interests for user '$id'";
+	echo "Error: Could not add as new interests for user '$id'";
 }
