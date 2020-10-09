@@ -4,8 +4,6 @@
 
 # UNIWeb API
 
-<section id="introduction">
-
 ## Preamble
 
 Before you spend time reading about the UNIWeb API, it is important to determine whether you need the API at all. There are some scenarios that can be resolved with the API, but that can also be resolved in a simpler way. One such case is the embedding of UNIWeb pages into an institutional website. UNIWeb pages allow for a special parameter to signal that the page will be embedded.
@@ -40,90 +38,79 @@ These steps are explained in more details below.
 
 ### Setting up Authorized Clients
 
-#### 1\. Get permission to create OAuth 2.0 Clients
+#### 1. Get permission to create OAuth 2.0 Clients
 
-<div class="indent">
+A **System Administrator**, can grant any user permission to create OAuth 2.0 clients. If you are not the System Administrator yourself, ask the System Administrator to give you this permission, as example below shows:
 
-A _System Administrator_, can grant any user permission to _create OAuth 2.0 clients_. If you are not the _System Administrator_ yourself, ask the _System Administrator_ to give you this permission, as example below shows:
-
-![](http://uniweb.network/clients/Proximify/uniweb/published/img/apiImgs/admin_rbac.png)
+<p align="center">
+  <img src="assets/admin_rbac.png" width="600px" alt="rbac screen">
+</p>
 
 Example above shows _Access Control_ page, accessible from _Administration_ panel, to _John Doe_, the _System Administrator_. In this example, role _Health Science IT Administrator_ has the permission to _create OAuth 2.0 clients_ for _Health Sciences_ department. _John Doe_ assigns this role to _Jane Roe_. _Jane Roe_ can now _create OAuth 2.0 clients_.
 
 </div>
 
-#### 2\. Create a OAuth 2.0 client and obtain client credentials
-
-<div class="indent">
+#### 2. Create a OAuth 2.0 client and obtain client credentials
 
 Using the UNIWeb Interface, you can create, edit, view and remove OAuth 2.0 clients. Each client has a unique username referred to as _Client ID_, and a system generated random password, referred to as _Client Secret_. Example below shows _Jane Roes_'s _OAuth 2.0 Administration_ page.
 
-![](http://uniweb.network/clients/Proximify/uniweb/published/img/apiImgs/api_oauth.png)
+<p align="center">
+  <img src="assets/api_oauth.png" width="600px" alt="Screenwith a list of OAuth API clients">
+</p>
 
 In this example, _Jane Roe_ has created two OAuth 2.0 clients. Clicking on the _view_ button for _Alice_ reveals her _Client Secret_ as shown below:
 
-![](http://uniweb.network/clients/Proximify/uniweb/published/img/apiImgs/api_oauth-view_client.png)
+<p align="center">
+  <img src="assets/api_oauth-view_client.png" width="600px" alt="Viewing the API secret of the new client">
+</p>
 
 In this hypothetical case, _Alice_'s _Client ID_ is _Alice_ and her _Client Secret_ is _7740731b32440350fccd_. These credentials are used in the next step to authenticate _Alice_.
 
-</div>
-
-#### 3\. Authenticate and get an Access Token
-
-<div class="indent">
+#### 3. Authenticate and get an Access Token
 
 With the client credentials obtained in step 3, you can authenticate to the UNIWeb _Token Endpoint_, and get an _Access Token_. An _Access Token_ is valid for one hour, and it will be used in the next step to retrieve resources from UNIWeb _Resource Endpoint_.
 
 With these pieces of information you will be allowed to make API requests. To do so, you can use one of our pre-built client libraries
 
--   [PHP client lib](https://github.com/Proximify/uniweb-api/tree/master/clients/PHP) (see [examples](https://github.com/Proximify/uniweb-api/tree/master/clients/PHP/examples))
+-   [PHP client lib](../README.md)
 
-</div>
-
-#### 4\. Access information through structured requests
-
-<div class="indent">
+#### 4. Access information through structured requests
 
 API requests are made by submitting JSON objects to the server. They tell the server which action, resources, sections and fields are desired and what filters to apply. In particular, the request objects can have the following properties: **action**, **content**, **filter**, and **resource**.
 
 Example request object:
 
-</div>
-
-<pre class="Widget JsonCode prettyprint prettyprinted"><span class="pln">{</span>
-    <span class="pln">"action":</span> <span class="str">"read"</span><span class="pln">,</span>
-    <span class="pln">"content":</span> <span class="str">"members"</span><span class="pln">,</span>
-    <span class="pln">"filter":</span> <span class="pln">{</span>
-        <span class="pln">"loginName":</span> <span class="str">"bob@mail.ca"</span>
-    <span class="pln">}</span><span class="pln">,</span>
-    <span class="pln">"resource":</span> <span class="pln">[</span>
-        <span class="str">"profile/biography"</span><span class="pln">,</span>
-        <span class="str">"profile/selected_degrees"</span>
-    <span class="pln">]</span>
-<span class="pln">}</span></pre>
+```json
+{
+    "action": "read",
+    "content": "members",
+    "filter": {
+        "loginName": "bob@mail.ca"
+    },
+    "resource": ["profile/biography", "profile/selected_degrees"]
+}
+```
 
 Example response for the above request:
 
-<pre class="Widget JsonCode prettyprint prettyprinted"><span class="pln">{</span>
-    <span class="pln">"bob@mail.ca":</span> <span class="pln">{</span>
-        <span class="pln">"profile/biography":</span> <span class="str">"Bob always knew he would be a great scientist"</span><span class="pln">,</span>
-        <span class="pln">"profile/selected_degrees":</span> <span class="pln">[</span>
-            <span class="pln">{</span>
-                <span class="pln">"degree_name":</span> <span class="str">"PhD"</span><span class="pln">,</span>
-                <span class="pln">"organization":</span> <span class="str">"McGill University"</span><span class="pln">,</span>
-                <span class="pln">"specialty":</span> <span class="str">"Materials Engineering"</span>
-            <span class="pln">}</span><span class="pln">,</span>
-            <span class="pln">{</span>
-                <span class="pln">"degree_name":</span> <span class="str">"Engineering"</span><span class="pln">,</span>
-                <span class="pln">"organization":</span> <span class="str">"University of Ottawa"</span>
-            <span class="pln">}</span>
-        <span class="pln">]</span>
-    <span class="pln">}</span>
-<span class="pln">}</span></pre>
-
-</section>
-
-<section id="requests">
+```json
+{
+    "bob@mail.ca": {
+        "profile/biography": "Bob always knew he would be a great scientist",
+        "profile/selected_degrees": [
+            {
+                "degree_name": "PhD",
+                "organization": "McGill University",
+                "specialty": "Materials Engineering"
+            },
+            {
+                "degree_name": "Engineering",
+                "organization": "University of Ottawa"
+            }
+        ]
+    }
+}
+```
 
 ## API Requests
 
@@ -135,61 +122,43 @@ In UNIWeb, a resource is always associated to a type of _content_. Current conte
 
 To request a resource, it is necessary to provide a path to it within UNIWeb. A _request path_ can be specified as a string by separating each element in the path with '/'. The path must have the following form:
 
-`page/section/section/section/...`
+    page/section/section/section/...
 
-<div class="indent">
+| Level         | Description                                                                                           |
+| ------------- | ----------------------------------------------------------------------------------------------------- |
+| `page`        | The 'page' where the information is displayed within UNIWeb. For example, 'profile', 'cv' or 'graph'. |
+| `section/...` | Sequence of section, subsection, sub-subsection,... that contain the target set of items to retrieve. |
 
-<table class="Widget Table api-actions">
+For example, the string
 
-<tbody>
+    cv/education/degrees
 
-<tr>
-
-<td>`page`</td>
-
-<td>The 'page' where the information is displayed within UNIWeb. For example, 'profile', 'cv' or 'graph'.</td>
-
-</tr>
-
-<tr>
-
-<td>`section/...`</td>
-
-<td>Sequence of section, subsection, sub-subsection,... that contain the target set of items to retrieve.</td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
-
-<span>For example, the string</span><span>
-
-<pre class="InlineCode">cv/education/degrees</pre>
-
-refers to all the items within the section _Degrees_, which is a subsection of the _Education_ section in the CV page of UNIWeb _members_.</span>
+refers to all the items within the section _Degrees_, which is a subsection of the _Education_ section in the CV page of UNIWeb _members_.
 
 Optionally, a request path can be specified as a JSON object. In particular, this is needed if one desires to request only a subset of the field values of an item. In this case, the _resource path_ can be given as
 
-<pre>   {"page/section/section/section/...": ["field name A", "field name B", ...]}</pre>
+```json
+{
+    "page/section/section/section/...": ["field name A", "field name B", "..."]
+}
+```
 
 It is also possible to encode the entire path as a JSON object. This is useful when requesting multiple sections under a common parent section or page:
 
-<pre>   "page":{
+```json
+    "page":{
        "parent_section":[
          "child_section A",
          "child_section B"
        ]
-   }</pre>
+    }
+```
 
 The _resource path_ above is equivalent to specifying two separate resource paths as strings:
 
-<pre>   [
-       "page/parent_section/child_section A",
-       "page/parent_section/child_section B"
-   ]</pre>
+```json
+["page/parent_section/child_section A", "page/parent_section/child_section B"]
+```
 
 ### Naming Conventions
 
@@ -205,15 +174,23 @@ For example, the string "Postal / Zip Code" is normalized to "postal_zip_code".
 
 The names of sections in resource paths must: (1) correspond to the sections names shown in the UNIWeb UI, and (2) be normalized according to the API naming rules described above. For example, the path to the Address resource in a CV is written as
 
-`cv/personal_information/address`
+    cv/personal_information/address
 
-![](http://uniweb.network/clients/Proximify/uniweb/published/img/apiImgs/api_cv_sections.png)
+<p align="center">
+  <img src="assets/api_cv_sections.png" width="600px" alt="Viewing the API secret of the new client">
+</p>
 
 The names of fields in resource paths must: (1) correspond to the field labels in the UNIWeb UI, and (2) be normalized according to the API naming rules described above. For example, the fields shown below in the Address section can be requested as
 
-`["address_type", "address_-_line_1", "location", "postal_zip_code"]`![](http://uniweb.network/clients/Proximify/uniweb/published/img/apiImgs/api_fields.png)
+```json
+["address_type", "address_-_line_1", "location", "postal_zip_code"]
+```
 
-### Stucturing Requests
+<p align="center">
+  <img src="assets/api_fields.png" width="400px" alt="api fields form">
+</p>
+
+### Structuring Requests
 
 API requests are given as JSON objects with one or more of the following properties.
 
@@ -525,14 +502,16 @@ The value of this property can be a string, an object or an array of strings/obj
 
 The request that follows would return the public profile information of all people in the Department of Civil Engineering as JSON.
 
-<pre class="Widget JsonCode prettyprint prettyprinted"><span class="pln">{</span>
-    <span class="pln">"action":</span> <span class="str">"read"</span><span class="pln">,</span>
-    <span class="pln">"content":</span> <span class="str">"members"</span><span class="pln">,</span>
-    <span class="pln">"filter":</span> <span class="pln">{</span>
-        <span class="pln">"unit":</span> <span class="str">"Civil Engineering"</span>
-    <span class="pln">}</span><span class="pln">,</span>
-    <span class="pln">"resources":</span> <span class="str">"profile"</span>
-<span class="pln">}</span></pre>
+```json
+{
+    "action": "read",
+    "content": "members",
+    "filter": {
+        "unit": "Civil Engineering"
+    },
+    "resources": "profile"
+}
+```
 
 #### Requesting to Read Multiple Resources in a Single Request
 
@@ -541,28 +520,28 @@ The request that follows would return two resources belonging to the user with l
 1.  the publicly available research interest tags found on his Profile
 2.  the Degree Name, Specialization, and Thesis Title fields from his CV found under Education > Degrees
 
-<pre class="Widget JsonCode prettyprint prettyprinted"><span class="pln">{</span>
-    <span class="pln">"action":</span> <span class="str">"read"</span><span class="pln">,</span>
-    <span class="pln">"content":</span> <span class="str">"members"</span><span class="pln">,</span>
-    <span class="pln">"language":</span> <span class="str">"fr"</span><span class="pln">,</span>
-    <span class="pln">"filter":</span> <span class="pln">{</span>
-        <span class="pln">"unit":</span> <span class="str">"McGill"</span><span class="pln">,</span>
-        <span class="pln">"title":</span> <span class="str">"Professor"</span><span class="pln">,</span>
-        <span class="pln">"login":</span> <span class="str">"john@smith.ca"</span>
-    <span class="pln">}</span><span class="pln">,</span>
-    <span class="pln">"resources":</span> <span class="pln">[</span>
-        <span class="str">"profile/research_interests"</span><span class="pln">,</span>
-        <span class="pln">{</span>
-            <span class="pln">"cv/education/degrees":</span> <span class="pln">[</span>
-                <span class="str">"degree_name"</span><span class="pln">,</span>
-                <span class="str">"specialization"</span><span class="pln">,</span>
-                <span class="str">"thesis_title"</span>
-            <span class="pln">]</span>
-        <span class="pln">}</span>
-    <span class="pln">]</span>
-<span class="pln">}</span></pre>
-
-</section>
+```json
+{
+    "action": "read",
+    "content": "members",
+    "language": "fr",
+    "filter": {
+        "unit": "McGill",
+        "title": "Professor",
+        "login": "john@smith.ca"
+    },
+    "resources": [
+        "profile/research_interests",
+        {
+            "cv/education/degrees": [
+                "degree_name",
+                "specialization",
+                "thesis_title"
+            ]
+        }
+    ]
+}
+```
 
 <section id="errors">
 
@@ -570,13 +549,13 @@ The request that follows would return two resources belonging to the user with l
 
 Errors will give information about what went wrong with a corresponding request. They will be of the following form:
 
-<pre class="Widget JsonCode prettyprint prettyprinted"><span class="pln">{</span>
-    <span class="pln">"error":</span> <span class="pln">{</span>
-        <span class="pln">"message":</span> <span class="str">"Error validating access token."</span><span class="pln">,</span>
-        <span class="pln">"type":</span> <span class="str">"OAuthException"</span><span class="pln">,</span>
-        <span class="pln">"code":</span> <span class="lit">98</span><span class="pln">,</span>
-        <span class="pln">"error_subcode":</span> <span class="lit">223</span>
-    <span class="pln">}</span>
-<span class="pln">}</span></pre>
-
-</section>
+```json
+{
+    "error": {
+        "message": "Error validating access token.",
+        "type": "OAuthException",
+        "code": 98,
+        "error_subcode": 223
+    }
+}
+```

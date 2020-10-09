@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "proximify/cli-prompter",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Proximify/cli-prompter.git",
-                "reference": "70b85a440b166bd0f644f323e95f23da05be96ff"
+                "reference": "92310662eaa9ff98cc18039e32517250295f43ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Proximify/cli-prompter/zipball/70b85a440b166bd0f644f323e95f23da05be96ff",
-                "reference": "70b85a440b166bd0f644f323e95f23da05be96ff",
+                "url": "https://api.github.com/repos/Proximify/cli-prompter/zipball/92310662eaa9ff98cc18039e32517250295f43ea",
+                "reference": "92310662eaa9ff98cc18039e32517250295f43ea",
                 "shasum": ""
             },
             "require": {
@@ -40,7 +40,7 @@
                 }
             ],
             "description": "Generic class to create interactive command-line interfaces for Composer-based projects.",
-            "time": "2020-10-08T18:41:28+00:00"
+            "time": "2020-10-08T19:49:17+00:00"
         }
     ],
     "packages-dev": [],
@@ -52,6 +52,5 @@
     "platform": {
         "php": ">=7.1.0"
     },
-    "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "platform-dev": []
 }

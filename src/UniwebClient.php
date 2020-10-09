@@ -12,7 +12,6 @@
 namespace Proximify\Uniweb\API;
 
 use Exception;
-use Proximify\CLIPrompter;
 
 require 'RemoteConnection.php';
 
