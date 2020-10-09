@@ -5,11 +5,11 @@
  * and the valid options for drop-down fields.
  */
 
+require_once __DIR__ . '/../src/UniwebClient.php';
+
 use Proximify\Uniweb\API\UniwebClient;
 
-if (!isset($client) || !($client instanceof UniwebClient)) {
-    throw new Exception('The global variable $client must be a UniwebClient.');
-}
+$client = new UniwebClient(UniwebClient::loadCredentials());
 
 // Request the information about a section, its field names and the type of each field.
 $resources = array('cv/contributions/presentations');

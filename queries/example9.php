@@ -5,11 +5,11 @@
  * research interests we request publications.
  */
 
+require_once __DIR__ . '/../src/UniwebClient.php';
+
 use Proximify\Uniweb\API\UniwebClient;
 
-if (!isset($client) || !($client instanceof UniwebClient)) {
-    throw new Exception('The global variable $client must be a UniwebClient.');
-}
+$client = new UniwebClient(UniwebClient::loadCredentials());
 
 $filter = array('unit' => 'Engineering', 'title' => 'Professor');
 $resources = array('profile/membership_information', 'profile/current_supervision', 'profile/selected_publications');

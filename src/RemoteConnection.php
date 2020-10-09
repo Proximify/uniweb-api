@@ -11,6 +11,8 @@
 
 namespace Proximify\Uniweb\API;
 
+use Exception;
+
 /**
  * Connects to a remote server and fetches assets from it.
  */

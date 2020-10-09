@@ -1,10 +1,10 @@
 <?php
 
+require_once __DIR__ . '/../src/UniwebClient.php';
+
 use Proximify\Uniweb\API\UniwebClient;
 
-if (!isset($client) || !($client instanceof UniwebClient)) {
-	throw new Exception('The global variable $client must be a UniwebClient.');
-}
+$client = new UniwebClient(UniwebClient::loadCredentials());
 
 // Prepare a 'read' request
 $resources = array('profile/membership_information', 'profile/research_interests');

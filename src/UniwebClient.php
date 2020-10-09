@@ -433,23 +433,37 @@ class UniwebClient
 	}
 
 	/**
+	 * Load API credentials.
+	 *
+	 * @param string|null $path Path to a JSON file with the credentials.
+	 * @return string
+	 */
+	public static function loadCredentials(?string $path = null): array
+	{
+		if (!$path) {
+			$path = __DIR__ . '/../settings/credentials.json';
+		}
+
+		if (!is_file($path)) {
+			throw new Exception("Cannot find '$path'");
+		}
+
+		$json = file_get_contents($path);
+
+		return $json ? json_decode($json, true) : [];
+	}
+
+	/**
 	 * Run a predefined API query.
 	 *
 	 * @param array $params Query parameters.
 	 * @return string The response.
 	 */
-	public static function runQuery(array $params): string
+	public static function runQuery(array $params): ?string
 	{
 		$queryName = $params['queryName'] ?? '';
-
-		$rootDir = $params['rootDir'] ?? getcwd();
-
-		$credentialsPath = $params['credentialsPath'] ??
-			"$rootDir/settings/credentials.json";
-
-		$json = file_get_contents($credentialsPath);
-
-		$credentials = $json ? json_decode($json, true) : [];
+		$rootDir = $params['rootDir'] ?? __DIR__ . '/..';
+		$filename = false;
 
 		// Disallow paths with dots (i.e. no relative paths)
 		if ($queryName && strpos($queryName, '.') === false) {
@@ -465,17 +479,14 @@ class UniwebClient
 			}
 		}
 
-		// Start buffering the standard output.
+		if (!$filename) {
+			return null;
+		}
+
+		// Buffering the standard output.
 		ob_start();
-
-		// The $client is used in the examples as a global variable.
-		$client = new self($credentials);
-
 		include $filename;
-
 		$output = ob_get_contents();
-
-		// Finish buffering and clean the buffer
 		ob_end_clean();
 
 		return $output;
@@ -487,7 +498,7 @@ class UniwebClient
 	 * @param array $params
 	 * @return void
 	 */
-	static public function outputQuery(array $params): void
+	public static function outputQuery(array $params): void
 	{
 		echo self::runQuery($params);
 	}

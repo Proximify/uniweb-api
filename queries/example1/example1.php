@@ -6,13 +6,12 @@
  * of Engineering.
  */
 
+require_once __DIR__ . '/../../src/UniwebClient.php';
 require_once 'markup_utils.php';
 
 use Proximify\Uniweb\API\UniwebClient;
 
-if (!isset($client) || !($client instanceof UniwebClient)) {
-	throw new Exception('The global variable $client must be a UniwebClient.');
-}
+$client = new UniwebClient(UniwebClient::loadCredentials());
 
 // Get authorized API client
 $filter = ['unit' => 'Faculty of Medicine', 'title' => 'Professor'];
