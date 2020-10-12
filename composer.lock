@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1d6fa082250b2821748a054f1b9afc6d",
+    "content-hash": "0a6f1d87b9c24643797d8377677971c9",
     "packages": [
         {
-            "name": "proximify/cli-prompter",
-            "version": "1.0.1",
+            "name": "proximify/cli-actions",
+            "version": "v1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Proximify/cli-prompter.git",
-                "reference": "92310662eaa9ff98cc18039e32517250295f43ea"
+                "url": "https://github.com/Proximify/cli-actions.git",
+                "reference": "456db860e7a4e5b8acb484cc9a12c3fbe61dde72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Proximify/cli-prompter/zipball/92310662eaa9ff98cc18039e32517250295f43ea",
-                "reference": "92310662eaa9ff98cc18039e32517250295f43ea",
+                "url": "https://api.github.com/repos/Proximify/cli-actions/zipball/456db860e7a4e5b8acb484cc9a12c3fbe61dde72",
+                "reference": "456db860e7a4e5b8acb484cc9a12c3fbe61dde72",
                 "shasum": ""
             },
             "require": {
@@ -39,8 +39,8 @@
                     "email": "support@proximify.ca"
                 }
             ],
-            "description": "Generic class to create interactive command-line interfaces for Composer-based projects.",
-            "time": "2020-10-08T19:49:17+00:00"
+            "description": "Command-line interface (CLI) with custom actions and interactive prompts (e.g. composer app:action argument).",
+            "time": "2020-10-12T02:26:12+00:00"
         }
     ],
     "packages-dev": [],
