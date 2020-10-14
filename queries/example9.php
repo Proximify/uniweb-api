@@ -11,9 +11,14 @@ use Proximify\Uniweb\API\UniwebClient;
 
 $client = new UniwebClient(UniwebClient::loadCredentials());
 
-$filter = array('unit' => 'Engineering', 'title' => 'Professor');
-$resources = array('profile/membership_information', 'profile/current_supervision', 'profile/selected_publications');
-$params = array('filter' => $filter, 'resources' => $resources);
+$filter = ['unit' => 'Engineering', 'title' => 'Professor'];
+
+$resources = [
+    'profile/membership_information',
+    'profile/current_supervision', 'profile/selected_publications'
+];
+
+$params = ['filter' => $filter, 'resources' => $resources];
 
 // Retrieve the data from the server
 $response = $client->read($params);

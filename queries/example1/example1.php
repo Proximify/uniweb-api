@@ -13,6 +13,20 @@ use Proximify\Uniweb\API\UniwebClient;
 
 $client = new UniwebClient(UniwebClient::loadCredentials());
 
+
+$request = [
+	'contentType' => 'units',
+	'resources' => ['profile/unit_information']
+];
+
+$response = $client->read($request, true);
+
+if (isset($response['error'])) {
+	throw new Exception($response['error']);
+}
+
+print_r($response);
+return;
 // Get authorized API client
 $filter = ['unit' => 'Faculty of Medicine', 'title' => 'Professor'];
 
@@ -28,10 +42,14 @@ $params = ['resources' => $resources, 'filter' => $filter, 'language' => 'en'];
 $response = $client->read($params, true);
 $items = [];
 
+if (isset($response['error'])) {
+	throw new Exception($response['error']);
+}
+
 // Create the HTML of items in a table of faculty members
 foreach ($response as $memberId => $member) {
-	$identification = $member['profile/membership_information'];
-	$description = $member['profile/research_description'];
+	$identification = $member['profile/membership_information'] ?? [];
+	$description = $member['profile/research_description'] ?? [];
 
 	if ($description && !empty($description['research_description'])) {
 		// Get the field value (has the same name than the section it belongs to
@@ -46,14 +64,14 @@ foreach ($response as $memberId => $member) {
 		$description = '';
 	}
 
-	$name = $identification['first_name'] . ' ' . $identification['last_name'];
-	$title = $identification['position_title'];
+	$name = ($identification['first_name'] ?? '') . ' ' . ($identification['last_name'] ?? '');
+	$title = $identification['position_title'] ?? '';
 
-	$interests = $member['profile/research_interests'];
+	$interests = $member['profile/research_interests'] ?? [];
 
 	$picture = sprintf(
 		'%spicture.php?action=display&contentType=members&id=%d&quality=large',
-		$client->homepage,
+		$client->getInstanceUrl(),
 		$memberId
 	);
 

@@ -1,7 +1,6 @@
 {
     "class": "Proximify\\Uniweb\\API\\UniwebClient",
     "method": "outputQuery",
-    "isStatic": true,
     "askConfirm": false,
     "arguments": {
         "queryName": {

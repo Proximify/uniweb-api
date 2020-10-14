@@ -7,9 +7,9 @@ use Proximify\Uniweb\API\UniwebClient;
 $client = new UniwebClient(UniwebClient::loadCredentials());
 
 // Prepare a 'read' request
-$resources = array('profile/membership_information', 'profile/research_interests');
-$filter = array('loginName' => 'macrini@proximify.ca');
-$params = array('resources' => $resources, 'filter' => $filter);
+$resources = ['profile/membership_information', 'profile/research_interests'];
+$filter = ['loginName' => 'macrini@proximify.ca'];
+$params = ['resources' => $resources, 'filter' => $filter];
 
 // Retrieve the data from the server
 // The read() function has a second parameter. If true, the response is an array instead

@@ -26,14 +26,14 @@ $client = new UniwebClient(UniwebClient::loadCredentials());
 
 // Set the login name of the user whose profile we want to write to.
 $id = 'macrini@proximify.ca';
-$resources = array('profile/research_interests/_fields_/interest');
-$params = array('resources' => $resources, 'id' => $id);
+$resources = ['profile/research_interests/_fields_/interest'];
+$params = ['resources' => $resources, 'id' => $id];
 
 // Retrieve the current interests of the member
 $result = $client->read($params);
 var_dump($result);
 
-$currentInterests = array();
+$currentInterests = [];
 
 foreach ($result->{'profile/research_interests'} as $item) {
 	$currentInterests[] = $item->interest;

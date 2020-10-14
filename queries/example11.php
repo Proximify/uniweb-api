@@ -22,9 +22,9 @@ $id = 'macrini@proximify.ca';
 
 $imageUrl = 'http://socialsciences.uottawa.ca/sites/default/files/public/fss_dean-69111_new.png';
 
-$resources = array('profile/picture' => array('url' => $imageUrl));
+$resources = ['profile/picture' => ['url' => $imageUrl]];
 
-$request = array('id' => $id, 'resources' => $resources);
+$request = ['id' => $id, 'resources' => $resources];
 
 $response = $client->updatePicture($request);
 

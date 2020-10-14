@@ -1,12 +1,9 @@
 <?php
 
 /**
- * File for class UniwebClient.
- *
  * @author    Proximify Inc <support@proximify.com>
  * @copyright Copyright (c) 2020, Proximify Inc
  * @license   MIT
- * @version   1.1.0 Uniweb API
  */
 
 namespace Proximify\Uniweb\API;
@@ -15,30 +12,72 @@ use Exception;
 
 require 'RemoteConnection.php';
 
+/**
+ * Reference API Client for the Uniweb application.
+ */
 class UniwebClient
 {
 	const FILES = '_files_';
 
-	public $clientName;
-	public $homepage;
-	protected $clientSecret;
+	/** @var string Default path for the connection credentials. */
+	const CREDENTIALS_PATH = 'settings/credentials.json';
+
+	/** @var string Alternative path for the connection credentials. */
+	const ALT_CREDENTIALS_PATH = 'settings/credentials/credentials.json';
+
+	/** @var array API credentials: homepage, clientName, clientSecret. */
+	private $credentials;
 
 	/**
 	 * Constructs a UNIWeb client with given credentials. There is also a helper static
 	 * function, getClient(), that can be used by passing the credential parameters
 	 * as individual function arguments in order to construct a client object.
 	 */
-	public function __construct($credentials)
+	public function __construct(?array $credentials = null)
 	{
 		date_default_timezone_set('UTC');
 
 		$this->assertClientParams($credentials);
 
-		$this->clientName = $credentials['clientName'];
-		$this->clientSecret = $credentials['clientSecret'];
-		$this->homepage = $credentials['homepage'];
-
+		$this->credentials = $credentials;
 		$this->conn = new RemoteConnection();
+	}
+
+	/**
+	 * Get the homepage URL defined in the credentials.
+	 *
+	 * @return string
+	 */
+	public function getInstanceUrl(): string
+	{
+		if (!($url = $this->credentials['homepage'] ?? false)) {
+			throw new Exception("Invalid empty homepage URL in credentials");
+		}
+
+		// Add a trailing slash of needed
+		if ($url[strlen($url) - 1] != '/') {
+			$url .= '/';
+		}
+
+		return $url;
+	}
+
+	public function getClientName(): string
+	{
+		if (!($clientName = $this->credentials['clientName'] ?? false)) {
+			throw new Exception("Invalid empty client name in credentials");
+		}
+
+		return $clientName;
+	}
+
+	public function getClientSecret(): string
+	{
+		if (!($clientSecret = $this->credentials['clientSecret'] ?? false)) {
+			throw new Exception("Invalid empty client secret in credentials");
+		}
+
+		return $clientSecret;
 	}
 
 	/**
@@ -143,7 +182,7 @@ class UniwebClient
 		self::assertValidRequest($request);
 
 		if (!isset($request[self::FILES])) {
-			$request[self::FILES] = array();
+			$request[self::FILES] = [];
 		}
 
 		$request[self::FILES][$name] = RemoteConnection::createFileObject($path, $mimeType);
@@ -317,13 +356,13 @@ class UniwebClient
 	 */
 	public function getAccessToken()
 	{
-		$postFields = array(
+		$postFields = [
 			'grant_type' => 'password',
-			'username' => $this->clientName,
-			'password' => $this->clientSecret
-		);
+			'username' => $this->getClientName(),
+			'password' => $this->getClientSecret()
+		];
 
-		$tokenURL = $this->homepage . 'api/token.php';
+		$tokenURL = $this->getInstanceUrl() . 'api/token.php';
 		$result = $this->conn->post($tokenURL, $postFields, true);
 
 		if ($result === false) {
@@ -369,7 +408,7 @@ class UniwebClient
 	}
 
 	/**
-	 * Ensures that the request is an array with all manadatory properties set. It does
+	 * Ensures that the request is an array with all mandatory properties set. It does
 	 * not check for the presence of an 'id' property because that is optional. To check
 	 * for that, call assertHasId() after this function.
 	 */
@@ -410,7 +449,7 @@ class UniwebClient
 	}
 
 	/**
-	 * Helper function to print out a response object in a deadable way.
+	 * Helper function to print out a response object in a readable way.
 	 */
 	public static function printResponse($response, $title = false)
 	{
@@ -441,7 +480,9 @@ class UniwebClient
 	public static function loadCredentials(?string $path = null): array
 	{
 		if (!$path) {
-			$path = __DIR__ . '/../settings/credentials.json';
+			$rootDir = dirname(__DIR__);
+			$path = self::getSubPath($rootDir, self::CREDENTIALS_PATH) ??
+				self::getSubPath($rootDir, self::ALT_CREDENTIALS_PATH);
 		}
 
 		if (!is_file($path)) {
@@ -461,26 +502,19 @@ class UniwebClient
 	 */
 	public static function runQuery(array $params): ?string
 	{
-		$queryName = $params['queryName'] ?? '';
-		$rootDir = $params['rootDir'] ?? __DIR__ . '/..';
-		$filename = false;
-
-		// Disallow paths with dots (i.e. no relative paths)
-		if ($queryName && strpos($queryName, '.') === false) {
-			$prefix = "$rootDir/queries/$queryName";
-
-			// Some queries are in a sub-folder and others are a single file
-			if (is_dir($prefix)) {
-				$prefix .= "/$queryName";
-			}
-
-			if (is_file("$prefix.php")) {
-				$filename = "$prefix.php";
-			}
+		if (empty($params['queryName'])) {
+			throw new Exception('Invalid empty query name');
 		}
 
+		$queryDir = $params['queryDir'] ?? dirname(__DIR__) . '/queries';
+		$queryName = $params['queryName'];
+		echo $queryDir;
+		// Some queries are in a sub-folder and others are a single file
+		$filename = self::getSubPath($queryDir, "$queryName.php") ??
+			self::getSubPath($queryDir, "$queryName/$queryName.php");
+
 		if (!$filename) {
-			return null;
+			throw new Exception("Cannot find query file '$queryName.php'");
 		}
 
 		// Buffering the standard output.
@@ -504,6 +538,22 @@ class UniwebClient
 	}
 
 	/**
+	 * Get an existing absolute path to a directory reachable from the given root directory. 
+	 * Return null for paths that go outside of the root directory.
+	 *
+	 * @param string $rootDir Root directory.
+	 * @param string $relDir Relative path from the root directory.
+	 * @return string|null
+	 */
+	public static function getSubPath(string $rootDir, string $relDir): ?string
+	{
+		return (($rootDir = realpath($rootDir)) &&
+			($dir = realpath($rootDir . '/' . $relDir)) &&
+			substr($dir, 0, strlen($rootDir)) === $rootDir) ?
+			$dir : null;
+	}
+
+	/**
 	 * Contacts the resource server and retrieves the requested resources.
 	 *
 	 * @param $email The email address of the person searched for, or '*' as wild card.
@@ -512,10 +562,10 @@ class UniwebClient
 	 */
 	protected function getResource($request)
 	{
-		$resourceURL = $this->homepage . 'api/resource.php?access_token=' .
+		$resourceURL = $this->getInstanceUrl() . 'api/resource.php?access_token=' .
 			$this->accessToken['token'];
 
-		$files = array();
+		$files = [];
 
 		if (is_array($request)) {
 			// If the request has files to send, that should not be converted to JSON
