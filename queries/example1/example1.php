@@ -25,10 +25,25 @@ if (isset($response['error'])) {
 	throw new Exception($response['error']);
 }
 
-print_r($response);
-return;
+$unitName = false;
+
+foreach ($response as $unitId => $data) {
+	$info = $data['profile/unit_information'] ?? [];
+
+	$type = $info['type'][1] ?? '';
+
+	if ($type == 'Faculty') {
+		$unitName = $info['name']['en'] ?? $info['name']['fr'] ?? $info['name'] ?? '';
+		break;
+	}
+}
+
+if (!$unitName) {
+	throw new Exception('Cannot find a Faculty unit name');
+}
+
 // Get authorized API client
-$filter = ['unit' => 'Faculty of Medicine', 'title' => 'Professor'];
+$filter = ['unit' => $unitName, 'title' => 'Professor'];
 
 $resources = [
 	'profile/membership_information',
