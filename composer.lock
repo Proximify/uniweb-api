@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "proximify/cli-actions",
-            "version": "v1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Proximify/cli-actions.git",
-                "reference": "f08feb224de59972ffb933487acb4eebc23840a8"
+                "reference": "77b880088f7fb03b7439c1e307f10ccb72b4ff77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Proximify/cli-actions/zipball/f08feb224de59972ffb933487acb4eebc23840a8",
-                "reference": "f08feb224de59972ffb933487acb4eebc23840a8",
+                "url": "https://api.github.com/repos/Proximify/cli-actions/zipball/77b880088f7fb03b7439c1e307f10ccb72b4ff77",
+                "reference": "77b880088f7fb03b7439c1e307f10ccb72b4ff77",
                 "shasum": ""
             },
             "require": {
@@ -40,7 +40,7 @@
                 }
             ],
             "description": "Command-line interface (CLI) with custom actions and interactive prompts (e.g. composer app:action argument).",
-            "time": "2020-10-14T18:06:46+00:00"
+            "time": "2020-10-15T21:30:03+00:00"
         }
     ],
     "packages-dev": [],
@@ -52,6 +52,5 @@
     "platform": {
         "php": ">=7.1.0"
     },
-    "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "platform-dev": []
 }

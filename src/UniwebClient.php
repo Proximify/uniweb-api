@@ -50,16 +50,34 @@ class UniwebClient
 	 */
 	public function getInstanceUrl(): string
 	{
-		if (!($url = $this->credentials['homepage'] ?? false)) {
+		$url = trim($this->credentials['homepage'] ?? '');
+
+		if (!$url) {
 			throw new Exception("Invalid empty homepage URL in credentials");
 		}
 
-		// Add a trailing slash of needed
-		if ($url[strlen($url) - 1] != '/') {
-			$url .= '/';
+		$parts = parse_url($url);
+		$host = $parts['host'] ?? '';
+		$path = $parts['path'] ?? '';
+
+		// If there is no host, there might be a missing '//'
+		if (!$host && $path) {
+			$parts = parse_url('//' . $url);
+			$host = $parts['host'] ?? '';
+			$path = $parts['path'] ?? '';
 		}
 
-		return $url;
+		if (!$host) {
+			throw new Exception("Invalid homepage URL");
+		}
+
+		// Path must end with a '/' iff it's not empty
+		if ($path = trim($path, '/')) {
+			$path .= '/';
+		}
+
+		// Only allow for the secure HTTPS protocol
+		return 'https://' . $host . '/' . $path;
 	}
 
 	public function getClientName(): string
@@ -68,7 +86,7 @@ class UniwebClient
 			throw new Exception("Invalid empty client name in credentials");
 		}
 
-		return $clientName;
+		return trim($clientName);
 	}
 
 	public function getClientSecret(): string
@@ -77,7 +95,7 @@ class UniwebClient
 			throw new Exception("Invalid empty client secret in credentials");
 		}
 
-		return $clientSecret;
+		return trim($clientSecret);
 	}
 
 	/**
@@ -371,7 +389,7 @@ class UniwebClient
 
 		$result = json_decode($result);
 
-		if (property_exists($result, 'error')) {
+		if (is_object($result) && property_exists($result, 'error')) {
 			throw new Exception('Error: ' . $result->error);
 		} elseif (!$result || !property_exists($result, 'expires_in')) {
 			throw new Exception('Unable to obtain access token');
