@@ -76,8 +76,14 @@ class UniwebClient
 			$path .= '/';
 		}
 
+		if ($host == 'localhost' || $host == '127.0.0.1') {
+			$scheme = $parts['scheme'] ?? 'http';
+		} else {
+			$scheme = 'https';
+		}
+
 		// Only allow for the secure HTTPS protocol
-		return 'https://' . $host . '/' . $path;
+		return $scheme . '://' . $host . '/' . $path;
 	}
 
 	public function getClientName(): string
