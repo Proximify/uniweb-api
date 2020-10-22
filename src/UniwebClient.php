@@ -8,8 +8,6 @@
 
 namespace Proximify\Uniweb\API;
 
-use Exception;
-
 require 'RemoteConnection.php';
 
 /**
@@ -53,7 +51,7 @@ class UniwebClient
 		$url = trim($this->credentials['homepage'] ?? '');
 
 		if (!$url) {
-			throw new Exception("Invalid empty homepage URL in credentials");
+			self::throwError("Invalid empty homepage URL in credentials");
 		}
 
 		$parts = parse_url($url);
@@ -68,7 +66,7 @@ class UniwebClient
 		}
 
 		if (!$host) {
-			throw new Exception("Invalid homepage URL");
+			self::throwError("Invalid homepage URL");
 		}
 
 		// Path must end with a '/' iff it's not empty
@@ -89,7 +87,7 @@ class UniwebClient
 	public function getClientName(): string
 	{
 		if (!($clientName = $this->credentials['clientName'] ?? false)) {
-			throw new Exception("Invalid empty client name in credentials");
+			self::throwError("Invalid empty client name in credentials");
 		}
 
 		return trim($clientName);
@@ -98,7 +96,7 @@ class UniwebClient
 	public function getClientSecret(): string
 	{
 		if (!($clientSecret = $this->credentials['clientSecret'] ?? false)) {
-			throw new Exception("Invalid empty client secret in credentials");
+			self::throwError("Invalid empty client secret in credentials");
 		}
 
 		return trim($clientSecret);
@@ -194,13 +192,13 @@ class UniwebClient
 	public function addFileAttachment(&$request, $name, $path, $mimeType)
 	{
 		if (!is_readable($path)) {
-			throw new Exception("Cannot read file at $path");
+			self::throwError("Cannot read file at $path");
 		}
 
 		// Make sure that the name has no periods because PHP converts them to '_'
 		// when used as the file names.
 		if (strpos($name, '.') !== false) {
-			throw new Exception("Attachment name can't contain periods: $name");
+			self::throwError("Attachment name can't contain periods: $name");
 		}
 
 		self::assertValidRequest($request);
@@ -219,7 +217,7 @@ class UniwebClient
 	public function getInfo($resources)
 	{
 		if (!$resources) {
-			throw new Exception('Resources cannot be empty');
+			self::throwError('Resources cannot be empty');
 		}
 
 		$request = ['action' => 'info', 'resources' => $resources];
@@ -234,7 +232,7 @@ class UniwebClient
 	public function getOptions($resources, $assoc = true)
 	{
 		if (!$resources) {
-			throw new Exception('Resources cannot be empty');
+			self::throwError('Resources cannot be empty');
 		}
 
 		$request = ['action' => 'options', 'resources' => $resources];
@@ -357,15 +355,15 @@ class UniwebClient
 
 			if (is_object($resource) && property_exists($resource, 'error')) {
 				if ($resource->error != 'invalid_token') {
-					throw new Exception($resource->error);
+					self::throwError($resource->error);
 				}
 			} elseif (is_null($resource)) {
-				throw new Exception('Invalid answer: ' . $rawResource);
+				self::throwError('Invalid answer: ' . $rawResource);
 			} else {
 				return $resource;
 			}
 		} elseif ($maxRetries < 0) {
-			throw new Exception('Could not renew access token. Maximum retry attempts reached.');
+			self::throwError('Could not renew access token. Maximum retry attempts reached.');
 		}
 
 		$this->getAccessToken();
@@ -390,15 +388,15 @@ class UniwebClient
 		$result = $this->conn->post($tokenURL, $postFields, true);
 
 		if ($result === false) {
-			throw new Exception('Access token could not be retrieved.');
+			self::throwError('Access token could not be retrieved.');
 		}
 
 		$result = json_decode($result);
 
 		if (is_object($result) && property_exists($result, 'error')) {
-			throw new Exception('Error: ' . $result->error);
+			self::throwError('Error: ' . $result->error);
 		} elseif (!$result || !property_exists($result, 'expires_in')) {
-			throw new Exception('Unable to obtain access token');
+			self::throwError('Unable to obtain access token');
 		}
 
 		$expiry = time() + $result->expires_in;
@@ -410,24 +408,67 @@ class UniwebClient
 	}
 
 	/**
+	 * Query units from the server. 
+	 *
+	 * @param string|null $unitType Filter response by type.
+	 * @param string|null $lang Localize to selected language code ('en, 'fr).
+	 * @return array
+	 */
+	public function queryUnits(string $unitType = null, string $lang = null): array
+	{
+		$request = [
+			'contentType' => 'units',
+			'resources' => ['profile/unit_information']
+		];
+
+		$response = $this->read($request, true);
+
+		if (isset($response['error'])) {
+			self::throwError($response['error']);
+		}
+
+		$units = [];
+
+		foreach ($response as $unitId => $data) {
+			$info = $data['profile/unit_information'] ?? [];
+
+			if ($unitType) {
+				$type = $info['type'][1] ?? '';
+
+				if ($type != $unitType) {
+					continue;
+				}
+			}
+
+			if ($lang && ($info['name'][$lang] ?? false)) {
+				$info['name'] = $info['name'][$lang];
+			}
+
+			$units[$unitId] = $info;
+		}
+
+		return $units;
+	}
+
+	/**
 	 * Ensures that all mandatory the credential properties are set.
 	 */
 	public static function assertClientParams($credentials)
 	{
 		if (!$credentials || !is_array($credentials)) {
-			throw new Exception('Invalid credentials');
+			self::throwError('Invalid credentials');
 		}
 
 		if (empty($credentials['clientName'])) {
-			throw new Exception('Client name cannot be empty');
+			self::throwError('Client name cannot be empty');
 		}
 
 		if (empty($credentials['clientSecret'])) {
-			throw new Exception('Client secret cannot be empty');
+			self::throwError('Client secret cannot be empty');
 		}
 
 		if (empty($credentials['homepage'])) {
-			throw new Exception('Homepage cannot be empty');
+			self::throwError('Homepage cannot be empty');
 		}
 	}
 
@@ -439,11 +480,11 @@ class UniwebClient
 	public static function assertValidRequest($request)
 	{
 		if (!$request || !is_array($request)) {
-			throw new Exception('Invalid request parameters');
+			self::throwError('Invalid request parameters');
 		}
 
 		if (empty($request['resources'])) {
-			throw new Exception('Empty "resources" property in request');
+			self::throwError('Empty "resources" property in request');
 		}
 	}
 
@@ -454,7 +495,7 @@ class UniwebClient
 	public static function assertHasId($request)
 	{
 		if (empty($request['id'])) {
-			throw new Exception('Missing "id" property in request');
+			self::throwError('Missing "id" property in request');
 		}
 	}
 
@@ -510,7 +551,7 @@ class UniwebClient
 		}
 
 		if (!is_file($path)) {
-			throw new Exception("Cannot find '$path'");
+			self::throwError("Cannot find '$path'");
 		}
 
 		$json = file_get_contents($path);
@@ -527,7 +568,7 @@ class UniwebClient
 	public static function runQuery(array $params): ?string
 	{
 		if (empty($params['queryName'])) {
-			throw new Exception('Invalid empty query name');
+			self::throwError('Invalid empty query name');
 		}
 
 		$queryDir = $params['queryDir'] ?? dirname(__DIR__) . '/queries';
@@ -538,7 +579,7 @@ class UniwebClient
 			self::getSubPath($queryDir, "$queryName/$queryName.php");
 
 		if (!$filename) {
-			throw new Exception("Cannot find query file '$queryName.php'");
+			self::throwError("Cannot find query file '$queryName.php'");
 		}
 
 		// Buffering the standard output.
@@ -614,5 +655,23 @@ class UniwebClient
 		$result = $this->conn->post($resourceURL, $postFields);
 
 		return $result;
+	}
+
+	/**
+	 * Throw an error message.
+	 *
+	 * @param string $msg The message to display.
+	 * @param array $context Optional contextual data.
+	 * @return void
+	 */
+	public static function throwError(string $msg, array $context = []): void
+	{
+		if ($context) {
+			$msg = "\n" . print_r($context, true);
+		}
+
+		$className = static::class;
+
+		throw new \Exception("$className:\n$msg");
 	}
 }
