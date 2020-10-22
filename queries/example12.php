@@ -24,9 +24,9 @@ $imagePath = '/Users/Shared/EEM-small-size.png';
 $mimeType = 'image/' . pathinfo($imagePath, PATHINFO_EXTENSION);
 $fileName = 'profilePicture'; // A unique name for the file (with no periods in it)
 
-$resources = array('profile/picture' => array('attachment' => $fileName));
+$resources = ['profile/picture' => ['attachment' => $fileName]];
 
-$request = array('id' => $id, 'resources' => $resources);
+$request = ['id' => $id, 'resources' => $resources];
 
 $client->addFileAttachment($request, $fileName, $imagePath, $mimeType);
 

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * 1. Query by ID (single result instead of array).
+ * 2. Iterate over the interests.
+ */
+
 require_once __DIR__ . '/../src/UniwebClient.php';
 
 use Proximify\Uniweb\API\UniwebClient;
@@ -9,14 +14,11 @@ $client = new UniwebClient(UniwebClient::loadCredentials());
 // When selecting one member, you can use the property 'id' instead of a filter. In that
 // case, the response won't be an array of members but just the member that you need
 $id = 'macrini@proximify.ca';
-$resources = array('profile/membership_information', 'profile/research_interests');
-$params = array('id' => $id, 'resources' => $resources);
+$resources = ['profile/membership_information', 'profile/research_interests'];
+$params = ['id' => $id, 'resources' => $resources];
 
 // Retrieve the data from the server
-// For Bruno: I added a second parameter so that the response is an array instead of an
-// object. I find that easier to deal with.
-
-$response = $client->read($params, true);
+$response = $client->read($params);
 
 if (!$response) {
 	throw new Exception('Count not find the member');
@@ -36,7 +38,7 @@ $lastName = $info['last_name'];
 // research there, name of the parent of the research them, name of the grand parent of
 // the research theme, and so on. Here I'm just using the base name of the interest.
 
-$researchInterestsList = array();
+$researchInterestsList = [];
 
 foreach ($interests as $tuple) {
 	$researchInterestsList[] = $tuple['interest'][1];

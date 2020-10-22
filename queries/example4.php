@@ -26,8 +26,8 @@ $id = 'macrini@proximify.ca';
 $sectionName = 'cv/contributions/presentations';
 $subsectionName = $sectionName . '/funding_sources';
 
-$resources = array($sectionName);
-$params = array('id' => $id, 'resources' => $resources);
+$resources = [$sectionName];
+$params = ['id' => $id, 'resources' => $resources];
 $response = $client->clear($params);
 
 if (!$response) {
@@ -49,41 +49,41 @@ if (!$response) {
 // Get the options for all fields in the section and subsection to which we will add
 // new items
 
-$resources = array($sectionName, $subsectionName);
+$resources = [$sectionName, $subsectionName];
 $response = $client->getOptions($resources);
 var_dump($response);
 
-$organizations = $response->{$subsectionName}->funding_organization;
+$organizations = $response[$subsectionName]['funding_organization'] ?? [];
 $org1 = 'Natural Sciences and Engineering Research Council of Canada (NSERC)';
 $orgId1 = $client->findFieldOptionId($organizations, $org1);
 
 // SUBITEM: Create one subitem to add to the funding sources of the main item.
-$fundingItem1 = array(
+$fundingItem1 = [
 	'funding_organization' => $orgId1,
 	'funding_reference_number' => 1
-);
+];
 
 // MAIN ITEMS: Defined items to insert
-$sectionItem1 = array(
+$sectionItem1 = [
 	'presentation_title' => 'TED Talk',
-	'description_contribution_value' => array(
+	'description_contribution_value' => [
 		'english' => 'Hi there',
 		'french' => 'Alo'
-	),
-	'funding_sources' => array(
+	],
+	'funding_sources' => [
 		$fundingItem1
-	)
-);
+	]
+];
 
-$sectionItem2 = array(
+$sectionItem2 = [
 	'presentation_title' => 'UN Talk',
-	'description_contribution_value' => array(
+	'description_contribution_value' => [
 		'english' => 'There is only this English value'
-	)
-);
+	]
+];
 
-$resources = array($sectionName => array($sectionItem1, $sectionItem2));
-$params = array('resources' => $resources, 'id' => $id);
+$resources = [$sectionName => [$sectionItem1, $sectionItem2]];
+$params = ['resources' => $resources, 'id' => $id];
 $response = $client->add($params); // add items
 
 if ($response) {

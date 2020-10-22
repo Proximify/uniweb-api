@@ -100,14 +100,63 @@
                 <td class="tg-2fdn">Add new items into a CV section. <strong>Note: Requires API write mode.</strong>
                 </td>
             </tr>
-            <!-- <tr>
-                <td class="tg-2fdn"><a href="?example5">Add items to CV</a></td>
-                <td class="tg-2fdn">Add new items into a CV section.</td>
-            </tr>
+
             <tr>
-                <td class="tg-2fdn"><a href="?example6">Add items to CV</a></td>
-                <td class="tg-2fdn">Add new items into a CV section.</td>
-            </tr> -->
+                <td class="tg-2fdn"><a href="?example5">Query with filter; <br> Get interests</a></td>
+                <td class="tg-2fdn">1. Query member data with the filter "loginName" (returns an array).<br> 2. Iterate
+                    over the interests.
+                </td>
+            </tr>
+
+            <tr>
+                <td class="tg-2fdn"><a href="?example6">Query by ID; <br> Get interests</a></td>
+                <td class="tg-2fdn">1. Query by ID (returns a single element)<br>2. Iterate
+                    over the interests.
+                </td>
+            </tr>
+
+            <tr>
+                <td class="tg-2fdn"><a href="?example7">Edit member info</a></td>
+                <td class="tg-2fdn">Edit some of the information on the membership section. <strong>Note: Requires API
+                        write mode.</strong><br><br>
+                    <small>
+                        Note that if there is already an item with data in the section, then only the field values that
+                        <br>
+                        you send will modify existing values. For example,if you don't send a middle name, and the
+                        user<br>
+                        had set a middle name, then the existing middle name will be unchanged.</small>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="tg-2fdn"><a href="?example8">Edit the "user profile" section in the CV</a></td>
+                <td class="tg-2fdn">There is a CV section named "user profile". IT is NOT the Uniweb Profile
+                    of a member. It is a CCV section.</td>
+            </tr>
+
+            <tr>
+                <td class="tg-2fdn"><a href="?example9">Requests publications</a></td>
+                <td class="tg-2fdn">Like example 1 but it selects publications instead of interests. <br>
+                    The query assumes an academic unit named Engineering.</td>
+            </tr>
+
+            <tr>
+                <td class="tg-2fdn"><a href="?example10">Add/edit the values of "select" fields</a></td>
+                <td class="tg-2fdn">Using fields that offer a dropdown of options to the users. <br>
+                    Pass the options as text instead of retrieving the IDs of the options first.</td>
+            </tr>
+
+            <tr>
+                <td class="tg-2fdn"><a href="?example11">Change the profile picture (URL)</a></td>
+                <td class="tg-2fdn">Change the profile picture of a user with an image given
+                    as a URL.</td>
+            </tr>
+
+            <tr>
+                <td class="tg-2fdn"><a href="?example12">Change the profile picture (file)</a></td>
+                <td class="tg-2fdn">Change the profile picture of a user with an image given
+                    as a local file path</td>
+            </tr>
         </tbody>
     </table>
 </body>

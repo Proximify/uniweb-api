@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * 1. Query member data with the filter "loginName".
+ * 2. Iterate over the interests. Each interest is an array with ID, name the the
+ * research there, name of the parent of the research them, name of the grand parent of
+ * the research theme, and so on. Here I'm just using the base name of the interest.
+ */
+
 require_once __DIR__ . '/../src/UniwebClient.php';
 
 use Proximify\Uniweb\API\UniwebClient;
@@ -15,7 +22,6 @@ $params = ['resources' => $resources, 'filter' => $filter];
 // The read() function has a second parameter. If true, the response is an array instead
 // of an object.
 $response = $client->read($params, true);
-$client->printResponse($response, 'Response is an array when read($params, true)');
 
 if (!$response) {
 	throw new Exception('Count not find the member');
@@ -27,7 +33,7 @@ $memberId = $ids[0];
 $memberData = $response[$memberId];
 
 // Show the data
-$client->printResponse($response, 'Member data obtained by using a filter');
+$client->printResponse($response, 'Member data obtained by using a filter (loginName)');
 
 $info = $memberData['profile/membership_information'];
 $interests = $memberData['profile/research_interests'];
@@ -39,7 +45,7 @@ $lastName = $info['last_name'];
 // research there, name of the parent of the research them, name of the grand parent of
 // the research theme, and so on. Here I'm just using the base name of the interest.
 
-$researchInterestsList = array();
+$researchInterestsList = [];
 
 foreach ($interests as $tuple) {
 	$researchInterestsList[] = $tuple['interest'][1];

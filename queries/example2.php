@@ -35,12 +35,12 @@ var_dump($result);
 
 $currentInterests = [];
 
-foreach ($result->{'profile/research_interests'} as $item) {
-	$currentInterests[] = $item->interest;
+foreach ($result['profile/research_interests'] as $item) {
+	$currentInterests[] = $item['interest'];
 }
 
 $interest1 = 'Artificial Intelligence';
-$interest2 = array('Expert Systems', 'Artificial Intelligence');
+$interest2 = ['Expert Systems', 'Artificial Intelligence'];
 
 // Use the client API helper function below to see if the user already have
 // the interests that we want to add
@@ -52,9 +52,9 @@ if ($interestId1 || $interestId2) {
 }
 
 // Get the value options for field 'interest' in section 'research_interests']
-$resources = array('profile/research_interests/_fields_/interest');
+$resources = ['profile/research_interests/_fields_/interest'];
 $options = $client->getOptions($resources);
-$options = $options->{'profile/research_interests'}->interest;
+$options = $options['profile/research_interests']['interest'] ?? [];
 
 
 // Use the client API helper function below to find the ID of the interests that we
@@ -77,12 +77,12 @@ if (!$interestId1 || !$interestId2) {
 	exit;
 }
 
-$resources = array('profile/research_interests' => array(
-	array('interest' => $interestId1),
-	array('interest' => $interestId2)
-));
+$resources = ['profile/research_interests' => [
+	['interest' => $interestId1],
+	['interest' => $interestId2]
+]];
 
-$params = array('resources' => $resources, 'id' => $id);
+$params = ['resources' => $resources, 'id' => $id];
 $response = $client->add($params);
 
 if ($response) {

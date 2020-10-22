@@ -144,7 +144,7 @@ class UniwebClient
 	 * Filter(optional): filtering settings ex: login_name => 'mert@proximify.ca'
 	 * @param bool $assoc returns array if it is true, otherwise json.
 	 */
-	public function read($request, $assoc = false)
+	public function read($request, $assoc = true)
 	{
 		self::assertValidRequest($request);
 
@@ -222,7 +222,7 @@ class UniwebClient
 			throw new Exception('Resources cannot be empty');
 		}
 
-		$request = array('action' => 'info', 'resources' => $resources);
+		$request = ['action' => 'info', 'resources' => $resources];
 
 		return $this->sendRequest($request);
 	}
@@ -231,15 +231,15 @@ class UniwebClient
 	 * Get field options.
 	 * @param (string, array) $resources path requested ex: cv/education/degrees
 	 */
-	public function getOptions($resources)
+	public function getOptions($resources, $assoc = true)
 	{
 		if (!$resources) {
 			throw new Exception('Resources cannot be empty');
 		}
 
-		$request = array('action' => 'options', 'resources' => $resources);
+		$request = ['action' => 'options', 'resources' => $resources];
 
-		return $this->sendRequest($request);
+		return $this->sendRequest($request, $assoc);
 	}
 
 	/**
@@ -247,7 +247,7 @@ class UniwebClient
 	 */
 	public function getTitles()
 	{
-		$request = array('action' => 'getTitles');
+		$request = ['action' => 'getTitles'];
 
 		return $this->sendRequest($request);
 	}
@@ -257,7 +257,7 @@ class UniwebClient
 	 */
 	public function getUnits()
 	{
-		$request = array('action' => 'getUnits');
+		$request = ['action' => 'getUnits'];
 
 		return $this->sendRequest($request);
 	}
@@ -267,7 +267,7 @@ class UniwebClient
 	 */
 	public function getRoles()
 	{
-		$request = array('action' => 'getRoles');
+		$request = ['action' => 'getRoles'];
 
 		return $this->sendRequest($request);
 	}
@@ -277,7 +277,7 @@ class UniwebClient
 	 */
 	public function getPermissions()
 	{
-		$request = array('action' => 'getPermissions');
+		$request = ['action' => 'getPermissions'];
 
 		return $this->sendRequest($request);
 	}
@@ -287,7 +287,7 @@ class UniwebClient
 	 */
 	public function getRolesPermissions()
 	{
-		$request = array('action' => 'getRolesPermissions');
+		$request = ['action' => 'getRolesPermissions'];
 
 		return $this->sendRequest($request);
 	}
@@ -297,7 +297,7 @@ class UniwebClient
 	 */
 	public function getMembers()
 	{
-		$request = array('action' => 'getMembers');
+		$request = ['action' => 'getMembers'];
 
 		return $this->sendRequest($request);
 	}
@@ -348,7 +348,7 @@ class UniwebClient
 	 * a token.
 	 * @return mixed The answer from the server.
 	 */
-	public function sendRequest($request, $assoc = false, $maxRetries = 10)
+	public function sendRequest($request, $assoc = true, $maxRetries = 10)
 	{
 		if (isset($this->accessToken) && time() < $this->accessToken['expiration']) {
 			$rawResource = $this->getResource($request);
@@ -401,12 +401,12 @@ class UniwebClient
 			throw new Exception('Unable to obtain access token');
 		}
 
-		$expiry = time() + $result->{'expires_in'};
+		$expiry = time() + $result->expires_in;
 
-		$this->accessToken = array(
+		$this->accessToken = [
 			'token' => $result->access_token,
 			'expiration' => $expiry
-		);
+		];
 	}
 
 	/**
@@ -463,11 +463,11 @@ class UniwebClient
 	 */
 	public static function getClient($clientName, $clientSecret, $homepage)
 	{
-		$credentials = array(
+		$credentials = [
 			'clientName' => $clientName,
 			'clientSecret' => $clientSecret,
 			'homepage' => $homepage
-		);
+		];
 
 		return new self($credentials);
 	}
@@ -605,7 +605,7 @@ class UniwebClient
 			$request = json_encode($request);
 		}
 
-		$postFields = array('request' => $request);
+		$postFields = ['request' => $request];
 
 		if ($files) {
 			$postFields = array_merge($postFields, $files);

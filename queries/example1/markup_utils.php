@@ -7,7 +7,7 @@ function makeTableItem($picture, $name, $title, $interests, $description)
 
 	// Note that title and interests are LOVs so their values are arrays with an ID
 	// ad the first element, and a display string as the second element. Additional
-	// elements corresponds extra info, sich as the parent theme of teh interest, etc
+	// elements corresponds to extra info such as the parent theme of the interest, etc
 	$title = $title[1];
 
 	for ($i = 0; $i < $numInterests; $i++) {
