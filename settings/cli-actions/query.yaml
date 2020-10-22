@@ -1,0 +1,7 @@
+{
+    'class': "Proximify\\Uniweb\\API\\UniwebClient",
+    'method': 'outputQuery',
+    'askConfirm': false,
+    'arguments':
+        { 'queryName': { 'prompt': 'Name of the query?', 'index': 0 } },
+}
