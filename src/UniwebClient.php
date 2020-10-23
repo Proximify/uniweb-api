@@ -410,11 +410,40 @@ class UniwebClient
 	/**
 	 * Query units from the server. 
 	 *
+	 * @param array $options Includes: 'lang', 'filter', and 'sortBy'.
+	 * @return array
+	 */
+	public function queryUnits(array $options = []): array
+	{
+		$request = [
+			'contentType' => 'units',
+			'lang' => $options['lang'] ?? 'en',
+			'filter' => $options['filter'] ?? null
+		];
+
+		$units = $this->read($request);
+
+		$sortBy = $options['sortBy'] ?? false;
+
+		if ($sortBy) {
+			usort($units, function ($u1, $u2) use ($sortBy) {
+				$a = $u1[$sortBy];
+				$b = $u2[$sortBy];
+				return ($a == $b) ? 0 : ($a < $b ? -1 : 1);
+			});
+		}
+
+		return $units;
+	}
+
+	/**
+	 * Query unit profiles from the server. 
+	 *
 	 * @param string|null $unitType Filter response by type.
 	 * @param string|null $lang Localize to selected language code ('en, 'fr).
 	 * @return array
 	 */
-	public function queryUnits(string $unitType = null, string $lang = null): array
+	public function queryUnitProfiles(string $unitType = null, string $lang = null): array
 	{
 		$request = [
 			'contentType' => 'units',
@@ -483,9 +512,9 @@ class UniwebClient
 			self::throwError('Invalid request parameters');
 		}
 
-		if (empty($request['resources'])) {
-			self::throwError('Empty "resources" property in request');
-		}
+		// if (empty($request['resources'])) {
+		// 	self::throwError('Empty "resources" property in request');
+		// }
 	}
 
 	/**

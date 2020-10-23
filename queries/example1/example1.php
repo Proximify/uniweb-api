@@ -25,13 +25,15 @@ if (isset($response['error'])) {
 	throw new Exception($response['error']);
 }
 
-$unitType = 'Faculty';
-$units = $client->queryUnits($unitType, 'en');
-$unitName = $units[1]['name'] ?? false;
+$units = $client->queryUnits(['sortBy' => 'memberCount']);
+$unit = array_pop($units); // last unit
 
-if (!$unitName) {
-	throw new Exception("Cannot find a '$unitType' unit name");
+if (!$unit) {
+	throw new Exception("Cannot find a unit");
 }
+
+$unitId = $unit['contentId'];
+$unitName = $unit['unitName'];
 
 // Get authorized API client
 $filter = ['unit' => $unitName, 'title' => 'Professor'];
