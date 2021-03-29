@@ -12,7 +12,7 @@ use Proximify\Uniweb\API\UniwebClient;
 $client = new UniwebClient(UniwebClient::loadCredentials());
 
 // Set the login name of the user whose profile we want to write to.
-$id = 'macrini@proximify.ca';
+$id = 'example@proximify.ca';
 
 // We are editing some of the information on the membership section. It is important to
 // notice that if there is already an item with data in the section, then only the field

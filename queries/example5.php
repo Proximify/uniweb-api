@@ -15,7 +15,7 @@ $client = new UniwebClient(UniwebClient::loadCredentials());
 
 // Prepare a 'read' request
 $resources = ['profile/membership_information', 'profile/research_interests'];
-$filter = ['loginName' => 'macrini@proximify.ca'];
+$filter = ['loginName' => 'example@proximify.ca'];
 $params = ['resources' => $resources, 'filter' => $filter];
 
 // Retrieve the data from the server

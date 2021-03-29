@@ -13,7 +13,7 @@ $client = new UniwebClient(UniwebClient::loadCredentials());
 
 // When selecting one member, you can use the property 'id' instead of a filter. In that
 // case, the response won't be an array of members but just the member that you need
-$id = 'macrini@proximify.ca';
+$id = 'example@proximify.ca';
 $resources = ['profile/membership_information', 'profile/research_interests'];
 $params = ['id' => $id, 'resources' => $resources];
 

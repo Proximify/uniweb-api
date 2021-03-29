@@ -105,7 +105,7 @@ class UniwebClient
 	/**
 	 * Add a new section item
 	 * @param array $params parameters to add a new section items includes
-	 * ID: unique identifier of member ex: macrini@proximify.ca
+	 * ID: unique identifier of member ex: example@proximify.ca
 	 * Resources: path requested ex: cv/education/degrees
 	 */
 	public function add($request)
@@ -121,7 +121,7 @@ class UniwebClient
 	/**
 	 * Edit a section item
 	 * @param array $params parameters to add a new section items includes
-	 * ID: unique identifier of member ex: macrini@proximify.ca
+	 * ID: unique identifier of member ex: example@proximify.ca
 	 * Resources: path requested ex: cv/education/degrees
 	 */
 	public function edit($request)
@@ -137,7 +137,7 @@ class UniwebClient
 	/**
 	 * Read a section item
 	 * @param array $params parameters to add a new section items includes
-	 * ID: unique identifier of member ex: macrini@proximify.ca
+	 * ID: unique identifier of member ex: example@proximify.ca
 	 * Resources: path requested ex: cv/education/degrees
 	 * Filter(optional): filtering settings ex: login_name => 'mert@proximify.ca'
 	 * @param bool $assoc returns array if it is true, otherwise json.
@@ -155,7 +155,7 @@ class UniwebClient
 	 * Clear section.
 	 *
 	 * @param array $params parameters to add a new section items includes
-	 * ID: unique identifier of member ex: macrini@proximify.ca
+	 * ID: unique identifier of member ex: example@proximify.ca
 	 * Resources: path requested ex: cv/education/degrees
 	 * Filter(optional): filtering settings ex: login_name => 'mert@proximify.ca'
 	 */

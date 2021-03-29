@@ -14,7 +14,7 @@ use Proximify\Uniweb\API\UniwebClient;
 $client = new UniwebClient(UniwebClient::loadCredentials());
 
 // Set the login name of the user whose profile we want to write to.
-$id = 'macrini@proximify.ca';
+$id = 'example@proximify.ca';
 
 $resources = ['profile/membership_information' => [
 	"first_name" => "Juan",

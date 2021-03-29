@@ -10,7 +10,7 @@ use Proximify\Uniweb\API\UniwebClient;
 
 $client = new UniwebClient(UniwebClient::loadCredentials());
 
-$id = 'macrini@proximify.ca';
+$id = 'example@proximify.ca';
 $resources = ['cv/user_profile'];
 $readParams = ['id' => $id, 'resources' => $resources];
 

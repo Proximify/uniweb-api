@@ -22,7 +22,7 @@ use Proximify\Uniweb\API\UniwebClient;
 
 $client = new UniwebClient(UniwebClient::loadCredentials());
 
-$id = 'macrini@proximify.ca';
+$id = 'example@proximify.ca';
 $sectionName = 'cv/contributions/presentations';
 $subsectionName = $sectionName . '/funding_sources';
 
