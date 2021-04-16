@@ -55,6 +55,7 @@ class RemoteConnection
 		curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($this->ch, CURLOPT_TIMEOUT, self::MAXIMUM_OP_TIME);
 		curl_setopt($this->ch, CURLOPT_USERAGENT, self::USERAGENT);
+		curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, true);
 
 		// Post or put method that starts with an '@' will result in curl trying to load
 		// the data from file instead of including the contents of the field in the request body.
