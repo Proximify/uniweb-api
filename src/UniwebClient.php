@@ -582,7 +582,7 @@ class UniwebClient
      * Load API credentials.
      *
      * @param string|null $path Path to a JSON file with the credentials.
-     * @return string
+     * @return array
      */
     public static function loadCredentials(?string $path = null): array
     {
@@ -605,7 +605,7 @@ class UniwebClient
      * Run a predefined API query.
      *
      * @param array $params Query parameters.
-     * @return string The response.
+     * @return string|null The response.
      */
     public static function runQuery(array $params): ?string
     {
