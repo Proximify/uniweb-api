@@ -1,114 +1,121 @@
-<p align="center">
-  <img src="docs/assets/uniweb_logo.svg" width="200px" alt="uniweb API logo">
-</p>
+# UNIWeb API Client
 
-# UNIWeb's API Definition and Client
+<img src="docs/assets/uniweb_logo.svg" width="200px" alt="UNIWeb API logo" align="center">
 
-The purpose of the API is to integrate UNIWeb with other systems within your organization. The API provides secure read/write access to information stored by UNIWeb, and it provides a mechanism to eliminate the need to duplicate data.
+## Overview
 
-The UNIWeb API provides:
+The UNIWeb API allows institutions to seamlessly integrate UNIWeb with their existing systems. This repository provides both the API documentation and a reference PHP client implementation.
 
--   An interface that allows you to control who has access to your institution's data through our API.
--   A means by which to securely read and update your institution's information.
--   Rich data in simple, straightforward JSON for maximum readability and reusability.
--   The choice to pre-filter the requested data, to obtain just the subset of information in which you are interested.
+### Key Features
 
-**Learn more:** [Complete documentation of the UNIWeb API](docs/uniweb-api.md).
+- **Secure Access Control**: Manage API access permissions at the institutional level
+- **Read/Write Operations**: Full support for reading and updating institutional data
+- **JSON Format**: Clean, well-structured JSON responses for easy integration
+- **Flexible Filtering**: Query specific data subsets to optimize response times
+- **Reference Implementation**: PHP client library with example use cases
 
-## API Client
+## Quick Start
 
-An example reference client for the Uniweb API is written in PHP and can be installed via [Composer](https://getcomposer.org/).
+### Installation Options
 
-It is common to download the client to run local tests and use the client as a reference. Other clients can be developed in different language since all the is required is the ability to send HTTP requests.
-
-To experiment with the API client, one can simply create a project with it by running the command
+#### Option 1: Create a New Project (Recommended for Testing)
 
 ```bash
+# Creates a new project with example code and CLI testing tools
 composer create-project proximify/uniweb-api
+
+# Optional: specify custom installation path
+composer create-project proximify/uniweb-api /custom/path
 ```
 
-The advantage of creating a project like that is that the `composer.json` in it already defines a CLI `query` script for [testing](#testing).
-
-The API client can also be added as a dependency of another project via
+#### Option 2: Add as a Dependency
 
 ```bash
+# Add to an existing project
 composer require proximify/uniweb-api
 ```
 
-### Testing
+## Setup Guide
 
-#### Creating the credentials
+### 1. Get Your API Credentials
 
-In your UNIWeb instance, go to the Administration screen and select the API section.
+1. Log into your UNIWeb instance
+2. Navigate to Administration → API section
+3. Click "Create a client"
+4. Enter a client name and save
+5. Click "View" on your new client to reveal the secret key
 
-<p align="center">
-  <img src="docs/assets/api-screen.png" width="600px" alt="uniweb API logo">
-</p>
+### 2. Configure Credentials
 
-Click on the "Create a client" button, enter a name for your API client, and save it.
+Create `settings/credentials.json`:
 
-<p align="center">
-  <img src="docs/assets/api-modal.png" width="600px" alt="uniweb API logo">
-</p>
-
-Once created, look for the client in the list of clients and click on its "View" button to find out the secret that was created for the client.
-
-<p align="center">
-  <img src="docs/assets/api-secret.png" width="600px" alt="uniweb API logo">
-</p>
-
-> Note: the permissions of the client are those of the user that created the client.
-
-To connect to UNIWeb via its API you will need the URL of the instance, the client name, and the client secret.
-
-#### Using the reference UniwebClient class
-
-The constructor of the **UniwebClient** class expects an array with credentials of the form
-
-```php
-$credentials = [
-    "clientName" => "",
-    "clientSecret" => "",
-    "homepage" => ""
-]
-```
-
-When running tests, the credentials can be defined in a json file named `credentials.json` and place within the `settings` folder. For security, `settings/credentials.json` should be added to `.gitignore` to avoid committing the secret by accident.
-
-### Running the sample queries
-
-The `uniweb-api` project includes a `queries` folder with code representing different use cases of the **UniwebClient** class to perform common types of API requests.
-
-If the project was created with `composer create-project`, then the root folder will also include a `www` folder with a simple script to generate a home webpage for running the sample queries. In addition, the `composer.json` file defines a Composer command that can be used to run the queries from a terminal.
-
-To run the sample queries you will need to set the API credentials in `settings/credentials.json`
-
-```php
+```json
 {
-    "clientName": "",
-    "clientSecret": "",
-    "homepage": ""
+    "clientName": "your_client_name",
+    "clientSecret": "your_client_secret",
+    "homepage": "your_uniweb_instance_url"
 }
 ```
 
-The `.gitignore` file of the uniweb-api project already includes the command to exclude that file from the repository. But if you use the project as a dependency of another project, make sure that the `credentials.json` is ignored in it as well.
+⚠️ **Security Note**: Add `settings/credentials.json` to your `.gitignore` file
 
-A simple way to test the client is to use the PHP built-in web server. To launch the built-in web server, change directory to the `www` folder within the uniweb-api project, and start the web server there.
+### 3. Run Example Queries
 
-> Note: If the project is a dependency within a parent project, you first must to go to the root folder `vendor/proximify/uniweb-api`.
+#### Using the Web Interface
 
-```zsh
-$ cd www && php -S localhost:8000
-```
+1. Navigate to the project directory
+2. Start PHP's built-in server:
+   ```bash
+   cd www
+   php -S localhost:8000
+   ```
+3. Open `http://localhost:8000` in your browser
+4. Select and run example queries through the web interface
 
-While the PHP web server is running, the URL `http://localhost:8000` should display the website.
-
-<p align="center">
-  <img src="docs/assets/api-queries.png" width="600px" alt="uniweb API logo" style="border:1px solid #ddd">
-</p>
-
-Alternatively, it is possible to test the predefined queries from the command line using composer and the `query` script.
+#### Using the CLI
 
 ```bash
-$ composer query example3
+# Run a specific example query
+composer query example3
 ```
+
+## PHP Client Usage
+
+```php
+$credentials = [
+    "clientName" => "your_client_name",
+    "clientSecret" => "your_client_secret",
+    "homepage" => "your_uniweb_instance_url"
+];
+
+$client = new UniwebClient($credentials);
+```
+
+## Documentation
+
+For detailed API documentation, see [Complete UNIWeb API Documentation](docs/uniweb-api.md).
+
+## Sample Use Cases
+
+The `queries` folder contains example code for common API operations:
+- Fetching user profiles
+- Updating research activities
+- Retrieving publication data
+- And more...
+
+## API Capabilities
+
+The UNIWeb API provides:
+- Secure authentication
+- User data management
+- Research activity tracking
+- Publication management
+- Institutional data access
+- Custom data filtering
+
+## Support
+
+For technical questions or issues:
+1. Check the [API Documentation](docs/uniweb-api.md)
+2. Create an issue in this repository
+3. Contact UNIWeb support through your institutional channels
