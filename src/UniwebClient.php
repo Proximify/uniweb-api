@@ -59,12 +59,14 @@ class UniwebClient
         $parts = parse_url($url);
         $host = $parts['host'] ?? '';
         $path = $parts['path'] ?? '';
+        $port = $parts['port'] ?? null;
 
         // If there is no host, there might be a missing '//'
         if (!$host && $path) {
             $parts = parse_url('//' . $url);
             $host = $parts['host'] ?? '';
             $path = $parts['path'] ?? '';
+            $port = $parts['port'] ?? null;
         }
 
         if (!$host) {
@@ -76,14 +78,23 @@ class UniwebClient
             $path .= '/';
         }
 
+        // Determine the scheme (protocol)
         if ($host == 'localhost' || $host == '127.0.0.1') {
             $scheme = $parts['scheme'] ?? 'http';
         } else {
             $scheme = 'https';
         }
 
-        // Only allow for the secure HTTPS protocol
-        return $scheme . '://' . $host . '/' . $path;
+        // Build the base URL with scheme and host
+        $finalUrl = $scheme . '://' . $host;
+
+        // Add port if specified
+        if ($port !== null) {
+            $finalUrl .= ':' . $port;
+        }
+
+        // Add path and ensure trailing slash
+        return $finalUrl . '/' . $path;
     }
 
     public function getClientName(): string
@@ -581,7 +592,7 @@ class UniwebClient
                 self::getSubPath($rootDir, self::ALT_CREDENTIALS_PATH);
         }
 
-        if (!is_file($path)) {
+        if (!$path || !is_file($path)) {
             self::throwError("Cannot find '$path'");
         }
 

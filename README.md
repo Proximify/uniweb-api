@@ -1,6 +1,8 @@
-# UNIWeb API Client
+<p align="center">
+  <img src="docs/assets/uniweb_logo.svg" width="200px" alt="uniweb API logo">
+</p>
 
-<img src="docs/assets/uniweb_logo.svg" width="200px" alt="UNIWeb API logo" align="center">
+# UNIWeb API Client
 
 ## Overview
 
@@ -25,7 +27,7 @@ The UNIWeb API allows institutions to seamlessly integrate UNIWeb with their exi
 composer create-project proximify/uniweb-api
 
 # Optional: specify custom installation path
-composer create-project proximify/uniweb-api /custom/path
+composer create-project proximify/uniweb-api my-test
 ```
 
 #### Option 2: Add as a Dependency
