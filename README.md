@@ -24,7 +24,7 @@ It is common to download the client to run local tests and use the client as a r
 To experiment with the API client, one can simply create a project with it by running the command
 
 ```bash
-$ composer create-project proximify/uniweb-api
+composer create-project proximify/uniweb-api
 ```
 
 The advantage of creating a project like that is that the `composer.json` in it already defines a CLI `query` script for [testing](#testing).
@@ -32,7 +32,7 @@ The advantage of creating a project like that is that the `composer.json` in it 
 The API client can also be added as a dependency of another project via
 
 ```bash
-$ composer require proximify/uniweb-api
+composer require proximify/uniweb-api
 ```
 
 ### Testing
