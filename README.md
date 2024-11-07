@@ -8,6 +8,9 @@
 
 The UNIWeb API allows institutions to seamlessly integrate UNIWeb with their existing systems. This repository provides both the API documentation and a reference PHP client implementation.
 
+> [!NOTE]
+> All the examples are located in the `queries` folder.
+
 ### Key Features
 
 - **Secure Access Control**: Manage API access permissions at the institutional level
