@@ -20,12 +20,12 @@ info:
     url: https://opensource.org/licenses/MIT
 
 servers:
-  - url: https://{institution}.uniweb.ca/api
+  - url: "{baseUrl}/api"
     description: UNIWeb Institution Instance
     variables:
-      institution:
-        default: demo
-        description: Your institution's UNIWeb subdomain
+      baseUrl:
+        default: https://demo.uniweb.ca
+        description: Your institution's full UNIWeb URL (e.g., https://research.university.edu)
 
 security:
   - OAuth2:
