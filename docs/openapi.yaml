@@ -1,0 +1,288 @@
+openapi: 3.0.3
+info:
+  title: UNIWeb API
+  description: |
+    The UNIWeb API enables seamless integration between UNIWeb and institutional systems, providing secure access to faculty and research data.
+
+    ## Key Features
+    - 🔐 OAuth 2.0 Authentication
+    - 📚 Rich Data in JSON Format
+    - 🔍 Flexible Filtering Options
+    - 🌐 Multilingual Support (English/French)
+
+    For client libraries and additional resources, visit our [GitHub repository](https://github.com/proximify/uniweb-api).
+  version: "1.0.0"
+  contact:
+    name: UNIWeb Support
+    url: https://uniweb.ca/support
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://{institution}.uniweb.ca/api
+    description: UNIWeb Institution Instance
+    variables:
+      institution:
+        default: demo
+        description: Your institution's UNIWeb subdomain
+
+security:
+  - OAuth2:
+      - read
+      - write
+
+paths:
+  /token.php:
+    post:
+      summary: Get access token
+      description: Obtain an OAuth 2.0 access token using client credentials
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  enum: [password]
+                username:
+                  type: string
+                  description: Client ID
+                password:
+                  type: string
+                  description: Client Secret
+              required:
+                - grant_type
+                - username
+                - password
+      responses:
+        "200":
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "401":
+          description: Invalid credentials
+
+  /resource.php:
+    get:
+      summary: Read resources
+      description: Retrieve data from UNIWeb based on specified filters and resources
+      tags:
+        - Resources
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [read, getMembers]
+        - name: resources[]
+          in: query
+          description: Resource paths to retrieve
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: id
+          in: query
+          description: Specific user ID
+          required: false
+          schema:
+            type: string
+        - name: filter[unit]
+          in: query
+          description: Filter by unit name
+          required: false
+          schema:
+            type: string
+        - name: filter[title]
+          in: query
+          description: Filter by title
+          required: false
+          schema:
+            type: string
+        - name: onlyPublic
+          in: query
+          description: Include only public data
+          required: false
+          schema:
+            type: integer
+            enum: [0, 1]
+        - name: language
+          in: query
+          description: Response language
+          required: false
+          schema:
+            type: string
+            enum: [en, fr]
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+    post:
+      summary: Create or update resources
+      description: Add or modify data in UNIWeb
+      tags:
+        - Resources
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResourceRequest"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /picture.php:
+    get:
+      summary: Get profile picture
+      description: Retrieve a user's profile picture
+      tags:
+        - Media
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [display]
+        - name: contentType
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [members]
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: quality
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [small, medium, large]
+            default: medium
+      responses:
+        "200":
+          description: Profile picture
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Picture not found
+
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        password:
+          tokenUrl: /token.php
+          scopes:
+            read: Read access
+            write: Write access
+
+  schemas:
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          enum: [bearer]
+        expires_in:
+          type: integer
+          description: Token validity in seconds
+
+    ResourceRequest:
+      type: object
+      properties:
+        action:
+          type: string
+          enum: [read, add, edit, clear, info]
+        content:
+          type: string
+          enum: [members, units, groups]
+        resources:
+          type: array
+          items:
+            type: string
+        filter:
+          type: object
+          properties:
+            unit:
+              type: string
+            title:
+              type: string
+            loginName:
+              type: string
+            modified_since:
+              type: string
+              format: date-time
+        language:
+          type: string
+          enum: [en, fr]
+      required:
+        - action
+        - content
+
+    ResourceResponse:
+      type: object
+      additionalProperties: true
+      description: Dynamic response based on requested resources
+
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    ForbiddenError:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            type:
+              type: string
+            code:
+              type: integer
+            error_subcode:
+              type: integer
