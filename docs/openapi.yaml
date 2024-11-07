@@ -134,8 +134,8 @@ paths:
         "403":
           $ref: "#/components/responses/ForbiddenError"
     post:
-      summary: Create or update resources
-      description: Add or modify data in UNIWeb
+      summary: Read resources defined by JSON data
+      description: Ready Uniweb resources by posting a JSON data object
       tags:
         - Resources
       requestBody:
