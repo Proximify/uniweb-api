@@ -4,15 +4,18 @@
 
 # UNIWeb API
 
-## Preamble
+## Quick Note: Simple Integration
 
-Before you spend time reading about the UNIWeb API, it is important to determine whether you need the API at all. There are some scenarios that can be resolved with the API, but that can also be resolved in a simpler way. One such case is the embedding of UNIWeb pages into an institutional website. UNIWeb pages allow for a special parameter to signal that the page will be embedded.
+Before implementing the API, consider if you just need to embed UNIWeb content. You can use the embed parameter:
 
-<pre>
-<iframe src="https://uniweb.uottawa.ca/?embed=1#!uottawa/members/1667/profile" width="400" height="300"></iframe>
-</pre>
-
-The <code>?embed=1</code> part of the URI tells UNIWeb to only show the **main** content of the page and hide everything else. With this approach, user profiles and other pages can easily be reused in different contexts within an institutional website.
+```html
+<iframe
+  src="https://your-uniweb-instance.com/?embed=1#!uottawa/members/1667/profile"
+  width="400"
+  height="300"
+>
+</iframe>
+```
 
 ## API Overview
 
@@ -20,10 +23,10 @@ The purpose of the API is to integrate UNIWeb with other systems within your org
 
 The UNIWeb API provides:
 
--   An interface that allows you to control who has access to your institution's data through our API.
--   A means by which to securely read and update your institution's information.
--   Rich data in simple, straightforward JSON for maximum readability and reusability.
--   The choice to pre-filter the requested data, to obtain just the subset of information in which you are interested.
+- An interface that allows you to control who has access to your institution's data through our API.
+- A means by which to securely read and update your institution's information.
+- Rich data in simple, straightforward JSON for maximum readability and reusability.
+- The choice to pre-filter the requested data, to obtain just the subset of information in which you are interested.
 
 The UNIWeb API uses [Internet Engineering Task Force (IETF)](http://www.ietf.org/) open authentication standard [OAuth 2.0](http://oauth.net/2/), for authentication and authorization using the [Resource Owner Password Credentials Grant protocol](http://tools.ietf.org/html/rfc6749#section-4.3). In this protocol, only users with granted permission can access the API.
 
@@ -72,7 +75,7 @@ With the client credentials obtained in step 3, you can authenticate to the UNIW
 
 With these pieces of information you will be allowed to make API requests. To do so, you can use one of our pre-built client libraries
 
--   [PHP client lib](../README.md)
+- [PHP client lib](../README.md)
 
 #### 4. Access information through structured requests
 
@@ -82,12 +85,12 @@ Example request object:
 
 ```json
 {
-    "action": "read",
-    "content": "members",
-    "filter": {
-        "loginName": "bob@mail.ca"
-    },
-    "resource": ["profile/biography", "profile/selected_degrees"]
+  "action": "read",
+  "content": "members",
+  "filter": {
+    "loginName": "bob@mail.ca"
+  },
+  "resource": ["profile/biography", "profile/selected_degrees"]
 }
 ```
 
@@ -95,20 +98,20 @@ Example response for the above request:
 
 ```json
 {
-    "bob@mail.ca": {
-        "profile/biography": "Bob always knew he would be a great scientist",
-        "profile/selected_degrees": [
-            {
-                "degree_name": "PhD",
-                "organization": "McGill University",
-                "specialty": "Materials Engineering"
-            },
-            {
-                "degree_name": "Engineering",
-                "organization": "University of Ottawa"
-            }
-        ]
-    }
+  "bob@mail.ca": {
+    "profile/biography": "Bob always knew he would be a great scientist",
+    "profile/selected_degrees": [
+      {
+        "degree_name": "PhD",
+        "organization": "McGill University",
+        "specialty": "Materials Engineering"
+      },
+      {
+        "degree_name": "Engineering",
+        "organization": "University of Ottawa"
+      }
+    ]
+  }
 }
 ```
 
@@ -139,7 +142,7 @@ Optionally, a request path can be specified as a JSON object. In particular, thi
 
 ```json
 {
-    "page/section/section/section/...": ["field name A", "field name B", "..."]
+  "page/section/section/section/...": ["field name A", "field name B", "..."]
 }
 ```
 
@@ -504,12 +507,12 @@ The request that follows would return the public profile information of all peop
 
 ```json
 {
-    "action": "read",
-    "content": "members",
-    "filter": {
-        "unit": "Civil Engineering"
-    },
-    "resources": "profile"
+  "action": "read",
+  "content": "members",
+  "filter": {
+    "unit": "Civil Engineering"
+  },
+  "resources": "profile"
 }
 ```
 
@@ -522,24 +525,20 @@ The request that follows would return two resources belonging to the user with l
 
 ```json
 {
-    "action": "read",
-    "content": "members",
-    "language": "fr",
-    "filter": {
-        "unit": "McGill",
-        "title": "Professor",
-        "login": "john@smith.ca"
-    },
-    "resources": [
-        "profile/research_interests",
-        {
-            "cv/education/degrees": [
-                "degree_name",
-                "specialization",
-                "thesis_title"
-            ]
-        }
-    ]
+  "action": "read",
+  "content": "members",
+  "language": "fr",
+  "filter": {
+    "unit": "McGill",
+    "title": "Professor",
+    "login": "john@smith.ca"
+  },
+  "resources": [
+    "profile/research_interests",
+    {
+      "cv/education/degrees": ["degree_name", "specialization", "thesis_title"]
+    }
+  ]
 }
 ```
 
@@ -551,11 +550,11 @@ Errors will give information about what went wrong with a corresponding request.
 
 ```json
 {
-    "error": {
-        "message": "Error validating access token.",
-        "type": "OAuthException",
-        "code": 98,
-        "error_subcode": 223
-    }
+  "error": {
+    "message": "Error validating access token.",
+    "type": "OAuthException",
+    "code": 98,
+    "error_subcode": 223
+  }
 }
 ```
